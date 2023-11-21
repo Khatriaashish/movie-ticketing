@@ -19,7 +19,7 @@ class AuthService{
         }
         catch(except){
             console.log("transformRequestData: ", except);
-            next(except);
+            throw except;
         }
     }
 
@@ -31,13 +31,36 @@ class AuthService{
         }
         catch(except){
             console.log("storePayload: ", except);
-            next(except)
+            throw except
         }
     }
 
     registerEmailMessage = (name, token)=>{
         return `<h1> Dear ${name},</h1> </br>
         <a href="${process.env.FRONTEND_URL}/verify-token/${token}">Click Here</a> to verify your email.`
+    }
+
+    getUserByFilter = async(filter)=>{
+        try{
+            let response = await UserModel.findOne(filter);
+            console.log(response);
+            return response;
+        }
+        catch(except){
+            console.log("getUserByFilter: ", except);
+            next(except);
+        }
+    }
+
+    updateUser = async(filter, updateData)=>{
+        try{
+            let response = await UserModel.updateOne(filter, {$set: updateData});
+            return response;
+        }
+        catch(except){
+            console.log("updateUser: ", except);
+            next(except);
+        }
     }
 }
 

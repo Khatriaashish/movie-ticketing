@@ -2,7 +2,9 @@
 const express = require('express');
 require('../config/db.config');
 const app = express();
-const router = require('../routes')
+const router = require('../routes');
+const { MulterError } = require('multer');
+const { ZodError } = require('zod');
 
 //body-parser
 app.use(express.json());
@@ -21,10 +23,10 @@ app.use((req, res, next)=>{
 })
 
 //exception handling
-app.use((err, req, res, next)=>{
-    let code = err.code??500
-    let message = err.message??"Internal Server Error"
-    let result = err.result??null
+app.use((error, req, res, next)=>{
+    let code = error.code??500
+    let message = error.message??"Internal Server Error"
+    let result = error.result??null
 
     //exception
     //multer exceptions
@@ -58,7 +60,7 @@ app.use((err, req, res, next)=>{
         result = msgBody;
         message = "Validation Fail"
     }
-    
+    console.log(code);
     //handle
     res.status(code).json({
         result: result,

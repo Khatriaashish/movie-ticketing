@@ -6,4 +6,12 @@ registerSchema = z.object({
     role: z.string().regex(/admin|boxoffice|customer/).default('customer')
 })
 
-module.exports = {registerSchema}
+passwordSchema = z.object({
+    password: z.string().regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/),
+    confirmPassword: z.string()
+}).refine((data)=>data.password===data.confirmPassword, {
+    message: "Password and confirm password doesn't match",
+    path: 'confirmPassword'
+})
+
+module.exports = {registerSchema, passwordSchema}
