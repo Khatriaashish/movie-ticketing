@@ -1,6 +1,8 @@
 const authSvc = require("./auth.service");
 const mailSvc = require('../../services/mail.service')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 class AuthController{
     register = async (req, res, next)=>{
@@ -74,6 +76,56 @@ class AuthController{
         }
         catch(except){
             console.log("setPassword: ", except);
+            next(except);
+        }
+    }
+
+    login = async(req, res, next)=>{
+        try{
+            let credentials = req.body;
+            let userDetail = await authSvc.getUserByFilter({email: credentials.email});
+            if(userDetail){
+                if(userDetail.token === null && userDetail.status === 'active'){
+                    if(bcrypt.compareSync(credentials.password, userDetail.password)){
+                        const token = jwt.sign({
+                            userId: userDetail._id,
+                        }, process.env.JWT_SECRET, {
+                            expiresIn: '1h'
+                        });
+        
+                        const refreshToken = jwt.sign({
+                            userId: userDetail._id,
+                        }, process.env.JWT_SECRET, {
+                            expiresIn: '1d'
+                        });
+        
+                        const patData = {
+                            userId: userDetail._id,
+                            token: token,
+                            refreshToken: refreshToken
+                        }
+        
+                        let response = await authSvc.patStore(patData);
+        
+                        res.json({
+                            result: response,
+                            message: "User logged In successfully"
+                        })
+                    }
+                    else{
+                        next({code: 401, message: "Credentials doesn't match"});
+                    }
+                }
+                else{
+                    next({code: 400, message: "User not activated"})
+                }
+            }
+            else{
+                next({code: 404, message: "User doesn't exist"});
+            }
+        }
+        catch(except){
+            console.log("login: ", except);
             next(except);
         }
     }

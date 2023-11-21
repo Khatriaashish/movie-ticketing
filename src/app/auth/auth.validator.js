@@ -14,4 +14,9 @@ passwordSchema = z.object({
     path: 'confirmPassword'
 })
 
-module.exports = {registerSchema, passwordSchema}
+loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8)
+})
+
+module.exports = {registerSchema, passwordSchema, loginSchema}

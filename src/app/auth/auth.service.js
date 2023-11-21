@@ -1,5 +1,6 @@
 const {generateRandomString} = require('../../config/helpers');
 const UserModel = require('../user/user.model');
+const PATModel = require('./personal-access-token.model');
 class AuthService{
     transformRequestData = (req)=>{
         try{
@@ -59,6 +60,18 @@ class AuthService{
         }
         catch(except){
             console.log("updateUser: ", except);
+            next(except);
+        }
+    }
+
+    patStore = async(data)=>{
+        try{
+            let pat = new PATModel(data);
+            let response = await pat.save();
+            return response;
+        }
+        catch(except){
+            console.log("patStore: ", except);
             next(except);
         }
     }
