@@ -8,4 +8,22 @@ const generateRandomString = (len = 100)=>{
     return random
 }
 
-module.exports = {generateRandomString}
+const getTokenFromHeaders = (req)=>{
+    let token = null;
+
+    if(req.headers['x-xsrf-token']){
+        token = req.headers['x-xsrf-token'];
+    }
+
+    if(req.params['token']){
+        token = req.params['token'];
+    }
+
+    if(req.headers['authorization']){
+        token = req.headers['authorization'];
+    }
+
+    return token;
+}
+
+module.exports = {generateRandomString, getTokenFromHeaders}

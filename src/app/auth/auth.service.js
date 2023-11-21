@@ -75,6 +75,17 @@ class AuthService{
             next(except);
         }
     }
+
+    getPatDataByFilter = async(filter)=>{
+        try{
+            let response = await PATModel.findOne(filter);
+            return response;
+        }
+        catch(except){
+            console.log("getPatDataByFilter: ", except);
+            next(except);
+        }
+    }
 }
 
 const authSvc = new AuthService();

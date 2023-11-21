@@ -129,6 +129,15 @@ class AuthController{
             next(except);
         }
     }
+
+    getLoggedInUser = async(req, res, next)=>{
+        let userDetail = req.authUser;
+        res.json({
+            result: userDetail,
+            message: "Data of logged in User fetched successfully",
+            meta: null
+        })
+    }
 }
 
 const authCtrl = new AuthController();
