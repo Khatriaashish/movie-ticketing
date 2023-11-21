@@ -27,7 +27,38 @@ app.use((err, req, res, next)=>{
     let result = err.result??null
 
     //exception
+    //multer exceptions
+    if(error instanceof MulterError){
+        if(error.code === 'LIMIT_FILE_SIZE'){
+            code = 400;
+            message = error.message;
+        }
+    }
 
+    //zod error handling
+    if(error instanceof ZodError){
+        code = 400;
+        msg = {};
+        
+        error.errors.map((err)=>msg[err.path[0]] = err.message);
+
+        message = "Validation failure";
+        result = msg;
+    }
+
+    //mongodb error
+    if(error.code === 11000){
+        code = 400;
+        let uniqueKeys = Object.keys(error.keyPattern)
+        let msgBody = uniqueKeys.map((key)=> {
+            return{
+                [key]: key + 'should be unique'
+            }
+        })
+        result = msgBody;
+        message = "Validation Fail"
+    }
+    
     //handle
     res.status(code).json({
         result: result,
