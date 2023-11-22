@@ -86,6 +86,17 @@ class AuthService{
             next(except);
         }
     }
+
+    deletePatData = async(filter)=>{
+        try{
+            let response = await PATModel.deleteOne(filter);
+            return response;
+        }
+        catch(except){
+            console.log("deletePatData: ", response);
+            next(except);
+        }
+    }
 }
 
 const authSvc = new AuthService();

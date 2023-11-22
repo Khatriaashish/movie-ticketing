@@ -18,6 +18,7 @@ router.get('/verify-token/:token', authCtrl.verifyToken);
 router.post('/set-password/:token', validateRequest(passwordSchema), authCtrl.setPassword);
 router.post('/login', validateRequest(loginSchema), authCtrl.login);
 router.get('/me', checkLogin, authCtrl.getLoggedInUser);
+router.post('/logout', checkLogin, authCtrl.logout);
 
 //exports
 module.exports = router;

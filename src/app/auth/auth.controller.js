@@ -138,6 +138,30 @@ class AuthController{
             meta: null
         })
     }
+
+    logout = async(req, res, next)=>{
+        try{
+            let userDetail = await authSvc.getUserByFilter({_id: req.authUser._id});
+            if(userDetail){
+                let patData = await authSvc.getPatDataByFilter({userId: req.authUser._id});
+                if(patData){
+                    let logout = await authSvc.deletePatData({userId: req.authUser._id});
+                    res.json({
+                        result: logout,
+                        message: "Logged Out Successfully",
+                        meta: null
+                    })
+                }
+            }
+            else{
+                next({code: 401, message: "User doesn't exist anymore"});
+            }
+        }
+        catch(except){
+            console.log("logout: ", except);
+            next(except);
+        }
+    }
 }
 
 const authCtrl = new AuthController();
