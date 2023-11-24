@@ -35,7 +35,7 @@ const userSchemaDef = new mongoose.Schema({
         default: null
     },
     resetToken: String,
-    resetExpiry: String
+    resetExpiry: Date
 }, {
     timestamps: true,
     autoCreate: true,

@@ -40,16 +40,19 @@ class AuthService{
         return `<h1> Dear ${name},</h1> </br>
         <a href="${process.env.FRONTEND_URL}/verify-token/${token}">Click Here</a> to verify your email.`
     }
+    resetPasswordEmailMessage = (name, token)=>{
+        return `<h1> Dear ${name},</h1> </br>
+        <a href="${process.env.FRONTEND_URL}/reset-password/${token}">Click Here</a> to reset your password.`
+    }
 
     getUserByFilter = async(filter)=>{
         try{
             let response = await UserModel.findOne(filter);
-            console.log(response);
             return response;
         }
         catch(except){
             console.log("getUserByFilter: ", except);
-            next(except);
+            throw except;
         }
     }
 
@@ -60,7 +63,7 @@ class AuthService{
         }
         catch(except){
             console.log("updateUser: ", except);
-            next(except);
+            throw except;
         }
     }
 
@@ -72,7 +75,7 @@ class AuthService{
         }
         catch(except){
             console.log("patStore: ", except);
-            next(except);
+            throw except;
         }
     }
 
@@ -83,7 +86,7 @@ class AuthService{
         }
         catch(except){
             console.log("getPatDataByFilter: ", except);
-            next(except);
+            throw except;
         }
     }
 
@@ -94,7 +97,7 @@ class AuthService{
         }
         catch(except){
             console.log("deletePatData: ", response);
-            next(except);
+            throw except;
         }
     }
 }

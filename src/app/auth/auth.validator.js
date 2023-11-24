@@ -19,4 +19,8 @@ loginSchema = z.object({
     password: z.string().min(8)
 })
 
-module.exports = {registerSchema, passwordSchema, loginSchema}
+emailSchema = z.object({
+    email: z.string().email().min(1)
+})
+
+module.exports = {registerSchema, passwordSchema, loginSchema, emailSchema}

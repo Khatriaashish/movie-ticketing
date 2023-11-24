@@ -2,6 +2,8 @@ const authSvc = require("./auth.service");
 const mailSvc = require('../../services/mail.service')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { generateRandomString } = require("../../config/helpers");
+const { response } = require("express");
 require('dotenv').config()
 
 class AuthController{
@@ -159,6 +161,70 @@ class AuthController{
         }
         catch(except){
             console.log("logout: ", except);
+            next(except);
+        }
+    }
+
+    forgetPassword = async(req, res, next)=>{
+        try{
+            let email = req.body.email;
+            let userDetail = await authSvc.getUserByFilter({email: email});
+            if(userDetail){
+                let token = generateRandomString();
+                let response = await authSvc.updateUser({email: email}, {resetToken: token, resetExpiry : Date.now() + 86400000});
+                let msg = authSvc.resetPasswordEmailMessage(userDetail.name, token);
+                let mailresponse = mailSvc.emailSend(email, "Reset your password", msg);
+
+                res.json({
+                    result: response,
+                    message: "Check email for futher processing",
+                    meta: null
+                })
+            }
+            else{
+                next({code: 404, message: "User not found"});
+            }
+            
+        }
+        catch(except){
+            console.log("forgetPassword: ", except);
+            next(except);
+        }
+    }
+
+    resetPassword = async (req, res, next)=>{
+        try{
+            let resetToken = req.params.resetToken;
+            let userDetail = await authSvc.getUserByFilter({resetToken: resetToken});
+            if(userDetail){
+                let today = new Date();
+                if(userDetail.resetExpiry < today){
+                    next({code: 401, message: "Token already expired"});
+                }
+                else{
+                    let newPass = req.body.password;
+                    let encPass = bcrypt.hashSync(newPass, 10);
+                    let updateData = {
+                        password: encPass,
+                        resetToken: null,
+                        resetExpiry: null
+                    }
+                    let response = await authSvc.updateUser({_id: userDetail._id}, updateData);
+
+                    res.json({
+                        result: response,
+                        message: "Password reset successfully",
+                        meta: null
+                    })
+                }
+            }
+            else{
+                next({code: 400, message: "Invalid resetToken"})
+            }
+            
+        }
+        catch(except){
+            console.log("resetPassword: ", except);
             next(except);
         }
     }
