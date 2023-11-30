@@ -12,6 +12,8 @@ const dirSetup = (req, res, next)=>{
     next()
 }
 
+router.get('/home', movieCtrl.getMovieForHome);
+
 router.route('/')
 //create movie
 .post(CheckLogin, CheckPermission('admin'), dirSetup, uploader.single('image'), ValidateRequest(movieSchema), movieCtrl.create)
@@ -20,5 +22,8 @@ router.route('/')
 
 router.route('/:id')
 .get(CheckLogin, CheckPermission('admin'), movieCtrl.getDetail)
+.put(CheckLogin, CheckPermission('admin'), dirSetup, uploader.single('image'), ValidateRequest(movieSchema), movieCtrl.update)
+.delete(CheckLogin, CheckPermission('admin'), movieCtrl.delete)
+
 
 module.exports = router

@@ -20,6 +20,22 @@ class MovieService{
             console.log('Svc:transformCreateRequest - ', except);
             throw except;
         }
+    }
+    
+    transformUpdateRequest = (req)=>{
+        try{
+            let editData = req.body;
+
+            if(req.file){
+                editData.image = req.file.filename;
+            }
+
+            return editData;
+        }
+        catch(except){
+            console.log('Svc:transformCreateRequest - ', except);
+            throw except;
+        }
     } 
 
     createMovie = async (data) => {
@@ -62,6 +78,32 @@ class MovieService{
             throw except;
         }
     }
+
+    updateMovie = async(id, editData)=>{
+        try{
+            let response = await MovieModel.findByIdAndUpdate(id, editData);
+            return response;
+        }
+        catch(except){
+            next(except);
+        }
+    }  
+    
+    deleteMovie = async(id)=>{
+        try{
+            let response = await MovieModel.findByIdAndDelete(id);
+            if(response){
+                return response
+            }
+            else{
+                throw {code: 404, message: "Movie may already deleted or doesn't exist"}
+            }
+        }
+        catch(except){
+            next(except);
+        }
+    }
+
 }
 
 
