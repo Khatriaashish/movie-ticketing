@@ -1,7 +1,7 @@
 const checkLogin = require('../../middlewares/auth.middleware');
 const checkPermission = require('../../middlewares/rbac.middleware');
 const uploader = require('../../middlewares/uploader.middleware');
-const bannerCtrl = require('../bannner/banner.controller');
+const bannerCtrl = require('./banner.controller');
 const { bannerSchema } = require('./banner.validator');
 const router = require('express').Router();
 const validateRequest = require('../../middlewares/validate-request.middleware')

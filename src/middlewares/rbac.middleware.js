@@ -1,7 +1,7 @@
 const checkPermission = (role)=>{
     return (req, res, next) => {
         let loggedInUser = req.authUser;
-        if((typeof role === 'string' && role === loggedInUser.role) || (typeof role !== 'string' && role.include(loggedInUser.role))){
+        if((typeof role === 'string' && role === loggedInUser.role) || (typeof role !== 'string' && role.includes(loggedInUser.role))){
             next();
         }
         else{
