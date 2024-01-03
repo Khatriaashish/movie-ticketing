@@ -1,77 +1,33 @@
 const MovieModel = require("./movie.model");
 
 class MovieService{
-    transformCreateRequest = (req)=>{
+    create = async (payload)=>{
         try{
-            let payload = req.body;
-
-            if(!req.file){
-                throw {code: 400, message: "File required"};
-            }
-            else{
-                payload.image = req.file.filename;
-            }
-
-            payload.createdBy = req.authUser._id;
-
-            return payload;
+            const movie = new MovieModel(payload);
+            return await movie.save();
         }
         catch(except){
-            console.log('Svc:transformCreateRequest - ', except);
-            throw except;
+            throw except
         }
     }
-    
-    transformUpdateRequest = (req)=>{
+
+    countMovie = async(filter = {})=>{
         try{
-            let editData = req.body;
-
-            if(req.file){
-                editData.image = req.file.filename;
-            }
-
-            return editData;
+            let count = await MovieModel.countDocuments(filter);
+            return count;
         }
         catch(except){
-            console.log('Svc:transformCreateRequest - ', except);
-            throw except;
-        }
-    } 
-
-    createMovie = async (data) => {
-        try{
-            let movie = new MovieModel(data);
-            let response = await movie.save();
-            return response;
-        }
-        catch(except){
-            console.log('Svc:createMovie - ', except);
             throw except;
         }
     }
 
-    getMovieByFilter = async (filter = {}, pagination = {skip: 0, limit: 10}, sort = {_id: 'desc'}) => {
+    listAllMovie = async(filter = {}, paging = {skip: 0, limit: 10}, sort = {_id: -1})=>{
         try{
             let response = await MovieModel.find(filter)
-            .skip(pagination.skip)
-            .limit(pagination.limit)
-            .populate('createdBy', ['_id', 'name', 'role'])
-            .sort(sort);
-                return response;
-        }
-        catch(except){
-            console.log('Svc:getMovieByFilter - ', except);
-            throw except;
-        }
-    }
-
-    getMovieDetail = async(filter)=>{
-        try{
-            let response = await MovieModel.findOne(filter)
-            .populate('createdBy', ['_id', 'name', 'role']);
-            if(response === null){
-                throw {code: 404, message: "Movie doesn't exist"}
-            }
+                .populate('createdBy', ['_id', 'name'])
+                .sort(sort)
+                .skip(paging.skip)
+                .limit(paging.limit)
             return response;
         }
         catch(except){
@@ -79,35 +35,42 @@ class MovieService{
         }
     }
 
-    updateMovie = async(id, editData)=>{
+    movieDetail = async(filter)=>{
         try{
-            let response = await MovieModel.findByIdAndUpdate(id, editData);
+            let response = await MovieModel.findOne(filter);
             return response;
         }
         catch(except){
-            next(except);
+            throw except;
         }
-    }  
-    
+    }
+
+    updateMovie = async(id, data)=>{
+        try{
+            let response = await MovieModel.findByIdAndUpdate(id, data);
+            return response;
+        }
+        catch(except){
+            throw except;
+        }
+    }
+
     deleteMovie = async(id)=>{
         try{
             let response = await MovieModel.findByIdAndDelete(id);
             if(response){
-                return response
+                return response;
             }
             else{
-                throw {code: 404, message: "Movie may already deleted or doesn't exist"}
+                throw ({code: 404, message: "Movie already deleted or doesn't exist"});
             }
+            return response;
         }
         catch(except){
-            next(except);
+            throw except;
         }
     }
-
 }
 
-
-
 const movieSvc = new MovieService();
-
-module.exports = movieSvc;
+module.exports = movieSvc

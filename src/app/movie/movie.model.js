@@ -1,57 +1,57 @@
 const mongoose = require('mongoose');
 
-const movieSchemaDef = new mongoose.Schema({
+const MovieSchema = new mongoose.Schema({
     title: {
         type: String,
-        require: true
+        min: 1,
+        trim: true,
+        required: true
     },
-    image: {
-        type: String,
-        require: true
-    },
+    image: String,
     language: {
         type: String,
-        require: true
+        required: true
     },
     genre: {
         type: String,
-        require: true
+        required: true
     },
     director: {
         type: String,
-        require: true
+        required: true,
     },
     cast: {
         type: String,
-        require: true
+        required: true
     },
     description: {
         type: String,
-        require: true
+        required: true
     },
     duration: {
         type: Number,
-        require: true
+        required: true
     },
     // releaseDate: {
     //     type: Date,
     //     required: true
     // },
+    createdBy: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        require: true
+    },
     status: {
         type: String,
         enum: ['active', 'inactive'],
-        default: 'inactive'
-    },
-    createdBy: {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-        require: true
+        default: 'active'
     }
 }, {
     autoCreate: true,
-    autoIndex: true
+    autoIndex: true,
+    timestamps: true
 })
 
-const MovieModel = mongoose.model('Movie', movieSchemaDef);
+const MovieModel = mongoose.model('Movie', MovieSchema);
 
-module.exports = MovieModel
+module.exports = MovieModel;
