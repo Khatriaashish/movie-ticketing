@@ -32,4 +32,13 @@ const deleteFile = (path, filename)=>{
         fs.unlinkSync(path+filename);
 }
 
-module.exports = {generateRandomString, getTokenFromHeaders, deleteFile}
+function toLetters(num) {
+    "use strict";
+    let mod = num % 26,
+        pow = num / 26 | 0,
+        out = mod ? String.fromCharCode(64 + mod) : (--pow, 'Z');
+    return pow ? toLetters(pow) + out : out;
+}
+
+
+module.exports = {generateRandomString, getTokenFromHeaders, deleteFile, toLetters}
