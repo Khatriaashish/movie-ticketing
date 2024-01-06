@@ -7,8 +7,8 @@ const createMovieSchema = z.object({
     director: z.string().min(1),
     cast: z.string().min(1),
     description: z.string().min(1),
-    duration: z.string().regex(/^\d+$/),
-    // releaseDate: z.date(),
+    duration: z.string(),
+    releaseDate: z.string().min(1),
     status: z.string().regex(/active|inactive/)
 })
 

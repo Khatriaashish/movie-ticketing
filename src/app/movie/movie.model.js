@@ -29,13 +29,23 @@ const MovieSchema = new mongoose.Schema({
         required: true
     },
     duration: {
-        type: Number,
+        hours: {
+            type: Number,
+            required: true
+        },
+        minutes: {
+            type: Number,
+            required: true
+        },
+        seconds: {
+            type: Number,
+            required: true
+        }
+    },
+    releaseDate: {
+        type: Date,
         required: true
     },
-    // releaseDate: {
-    //     type: Date,
-    //     required: true
-    // },
     createdBy: {
         type: mongoose.Types.ObjectId,
         ref: 'User',

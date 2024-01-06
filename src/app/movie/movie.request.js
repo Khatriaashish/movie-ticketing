@@ -18,6 +18,13 @@ class MovieRequest{
         
         payload.image = this.file.filename 
 
+        const duration = payload.duration.split(":");
+
+        payload.duration.hours = duration[0];
+        payload.duration.minutes = duration[1];
+        payload.duration.seconds = duration[2];
+
+        payload.releaseDate = new Date(payload.releaseDate);
         payload.createdBy = this.user;
 
         return payload;
@@ -32,6 +39,8 @@ class MovieRequest{
             payload.image = this.file.filename
         else
             payload.image =  old.image;
+
+        payload.releaseDate = new Date(payload.releaseDate);
 
             return payload;
     }
