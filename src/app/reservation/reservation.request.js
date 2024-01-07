@@ -5,36 +5,38 @@ class ReservationRequest{
     constructor(req){
         this.body = req.body;
         this.file = req.file;
-        this.user = req.authUser._id;
+        this.user = req.authUser;
     }
 
     transformCreateReservationRequest = (showtime)=>{
         const payload = {
             ...this.body,
         }
-
+        payload.date = showtime.startDate;
         payload.ticketPrice = showtime.theatreId.ticketPrice;
         payload.total = showtime.theatreId.ticketPrice;
         payload.movieId = showtime.movieId;
         payload.theatreId = showtime.theatreId;
-        payload.username = this.user.email;
+        payload.user = this.user._id;
         payload.selectedSeats = [];
         payload.selectedSeats = payload.selected.split(",");
         return payload;
     }
 
-    transformUpdateReservationRequest = (old)=>{
+    transformUpdateReservationRequest = (showtime)=>{
         const payload = {
             ...this.body,
         }
 
-        payload.ticketPrice = movie.ticketprice;
-        payload.total = movie.ticketprice;
+        payload.date = showtime.startDate;
+        payload.ticketPrice = showtime.theatreId.ticketPrice;
+        payload.total = showtime.theatreId.ticketPrice;
         payload.movieId = showtime.movieId;
         payload.theatreId = showtime.theatreId;
-        payload.username = this.user.email;
-
-            return payload;
+        payload.user = this.user._id;
+        payload.selectedSeats = [];
+        payload.selectedSeats = payload.selected.split(",");
+        return payload;
     }
 }
 

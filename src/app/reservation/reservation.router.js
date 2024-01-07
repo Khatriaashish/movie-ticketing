@@ -12,9 +12,9 @@ const router = require('express').Router();
 router.get('/home', reservationCtrl.readHome);
 router.put('/checkin/:id', checkLogin, checkPermission(['admin', 'boxoffice']), reservationCtrl.checkin)
 //online payment
-.post('offline-payment', checkLogin, checkPermission(['admin', 'customer']), reservationCtrl.onlinePayment)
+.post('/online-payment/:id', checkLogin, checkPermission(['admin', 'customer']), reservationCtrl.onlinePayment)
 //offline payment
-router.post('/offline-payment', checkLogin, checkPermission(['admin', 'boxoffice']), reservationCtrl.offlinePayment)
+router.post('/offline-payment/:id', checkLogin, checkPermission(['admin', 'boxoffice']), reservationCtrl.offlinePayment)
 
 router.route('/')
 //create reservation

@@ -11,7 +11,7 @@ const ReservationSchema = new mongoose.Schema({
         trim: true
     },
     seats: {
-        type: [mongoose.Type.Mixed],
+        type: [mongoose.Types.Mixed],
         required: true
     },
     selectedSeats: [{

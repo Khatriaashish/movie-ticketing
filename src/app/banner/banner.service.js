@@ -7,7 +7,7 @@ class BannerService{
                 ...req.body
             }
 
-            if(req.file){
+            if(!req.file){
                 throw {code: 400, message: "Image is required"};
             }
             else{

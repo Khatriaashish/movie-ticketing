@@ -1,11 +1,13 @@
 const showtimeSvc = require("./showtime.service");
 const ShowtimeRequest = require("./showtime.request")
-const {deleteFile} = require("../../config/helpers")
+const {deleteFile} = require("../../config/helpers");
+const movieSvc = require("../movie/movie.service");
 
 class ShowtimeController{
     createShowtime = async (req, res, next)=>{
         try{
-            const showtime = (new ShowtimeRequest(req)).transformCreateShowtimeRequest();
+            const movie = await movieSvc.movieDetail(req.body.movieid)
+            const showtime = (new ShowtimeRequest(req)).transformCreateShowtimeRequest(movie);
             const response = await showtimeSvc.create(showtime);
             res.json({
                 result: response,
@@ -84,8 +86,10 @@ class ShowtimeController{
         try{
             let id = req.params.id;
             let showtime = await showtimeSvc.showtimeDetail({_id: id, createdBy: req.authUser._id});
+            const movie = await movieSvc.movieDetail(req.body.movieid)
+
             if(showtime){
-                let data = (new ShowtimeRequest(req)).transformUpdateShowtimeRequest(showtime);
+                let data = (new ShowtimeRequest(req)).transformUpdateShowtimeRequest(movie);
                 let oldShowtime = await showtimeSvc.updateShowtime(id, data);
                 if(data.image)
                     deleteFile('./public/uploads/showtimes/', oldShowtime.image);

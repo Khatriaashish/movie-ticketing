@@ -37,7 +37,8 @@ class ReservationService{
 
     reservationDetail = async(filter)=>{
         try{
-            let response = await ReservationModel.findOne(filter);
+            let response = await ReservationModel.findOne(filter)
+                .populate('showtimeId', ["_id", "startDate"]);
             return response;
         }
         catch(except){

@@ -18,7 +18,7 @@ class ShowtimeRequest{
         const endDate = new Date(payload.startDate);
         endDate.setHours(endDate.getHours()+movie.duration.hours);
         endDate.setMinutes(endDate.getMinutes()+movie.duration.minutes);
-        endDate.setSecondss(endDate.getSeconds()+movie.duration.seconds);
+        endDate.setSeconds(endDate.getSeconds()+movie.duration.seconds);
         payload.endDate = endDate;
 
         payload.createdBy = this.user;
@@ -26,7 +26,7 @@ class ShowtimeRequest{
         return payload;
     }
 
-    transformUpdateShowtimeRequest = (old)=>{
+    transformUpdateShowtimeRequest = (movie)=>{
         const payload = {
             ...this.body,
         }
@@ -36,7 +36,7 @@ class ShowtimeRequest{
         const endDate = new Date(payload.startDate);
         endDate.setHours(endDate.getHours()+movie.duration.hours);
         endDate.setMinutes(endDate.getMinutes()+movie.duration.minutes);
-        endDate.setSecondss(endDate.getSeconds()+movie.duration.seconds);
+        endDate.setSeconds(endDate.getSeconds()+movie.duration.seconds);
         payload.endDate = endDate;
 
         return payload;

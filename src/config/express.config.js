@@ -1,6 +1,8 @@
 //imports
 const express = require('express');
 require('../config/db.config');
+require('./defaultadmin.config')
+
 const app = express();
 const router = require('../routes');
 const { MulterError } = require('multer');

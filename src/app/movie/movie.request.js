@@ -19,7 +19,7 @@ class MovieRequest{
         payload.image = this.file.filename 
 
         const duration = payload.duration.split(":");
-
+        payload.duration = {}
         payload.duration.hours = duration[0];
         payload.duration.minutes = duration[1];
         payload.duration.seconds = duration[2];
